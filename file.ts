@@ -198,11 +198,23 @@ dotenv.config();
 const privateKey = process.env.PRIVATE_KEY;
 
 if (!privateKey) {
-  console.error("PRIVATE_KEY is not set");
+  console.error("PRIVATE_KEY is not set in .env file");
   process.exit(1);
 }
 
-const wallet = Keypair.fromSecretKey(bs58.decode(privateKey));
-//wsol to sol
-unwrapSol(wallet, 1); 
+try {
+  // Try to decode the private key
+  const secretKey = bs58.decode(privateKey);
+  const wallet = Keypair.fromSecretKey(secretKey);
+  
+  console.log("Wallet public key:", wallet.publicKey.toString());
+  
+  // Uncomment one of these lines to perform the desired operation:
+  // wrapSol(wallet, 0.1);  // Wrap 0.1 SOL to WSOL
+  unwrapSol(wallet, 0.1);  // Unwrap 0.1 WSOL to SOL
+} catch (error: unknown) {
+  console.error("Error with private key:", error.message);
+  console.log("Make sure your PRIVATE_KEY in .env is a valid base58-encoded Solana private key");
+  process.exit(1);``
+}
 
