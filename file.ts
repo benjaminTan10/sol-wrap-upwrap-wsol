@@ -17,8 +17,6 @@ import { Keypair } from "@solana/web3.js";
 import bs58 from "bs58";
 import dotenv from "dotenv";
 
-import { toast } from "react-toastify"; // Or your preferred toast library
-
 //sol to wsol
 export async function wrapSol(wallet: any, amount: number) {
   const walletPublicKey = wallet.publicKey;
@@ -106,7 +104,7 @@ export async function wrapSol(wallet: any, amount: number) {
     if (error instanceof Error && "logs" in error) {
       console.error("Transaction logs:", (error as { logs: unknown }).logs);
     }
-    toast.error(`Failed to wrap SOL: ${error instanceof Error ? error.message : String(error)}`);
+    console.error(`Failed to wrap SOL: ${error instanceof Error ? error.message : String(error)}`);
   }
 }
 
@@ -213,8 +211,8 @@ try {
   // wrapSol(wallet, 0.1);  // Wrap 0.1 SOL to WSOL
   unwrapSol(wallet, 0.1);  // Unwrap 0.1 WSOL to SOL
 } catch (error: unknown) {
-  console.error("Error with private key:", error.message);
+  console.error("Error with private key:", error instanceof Error ? error.message : String(error));
   console.log("Make sure your PRIVATE_KEY in .env is a valid base58-encoded Solana private key");
-  process.exit(1);``
+  process.exit(1);
 }
 
